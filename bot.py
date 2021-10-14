@@ -20,7 +20,9 @@ async def on_ready():
 async def generate(ctx, width: int, height: int, mines: int):
     try:
         mb = MinesweeperBoard(width, height, mines)
-    except TooManyMinesError:
+    except UnplayableBoardError:
+        # TODO: Seems like the exception is caught by the bot client before it's caught here? I don't know if that's
+        #  what's actually happening but yeah. Basically I don't know how I'm supposed to handle my own exceptions.
         await ctx.send("Cannot create a playable board with these parameters. Try reducing the number of mines or increasing the dimensions of the board.")
         return
 

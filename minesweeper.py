@@ -1,6 +1,6 @@
 import random
 
-class TooManyMinesError(Exception):
+class UnplayableBoardError(Exception):
     pass
 
 
@@ -98,8 +98,8 @@ class MinesweeperBoard:
                       if not (x, y) in self.adjacent_coords(uncover_x, uncover_y)]
         for i in range(self.mines):
             if tiles_list == []:
-                raise TooManyMinesError("Cannot create a playable board with these parameters. Try reducing the number of mines or increasing the dimensions of the board.")
-            
+                raise UnplayableBoardError("Cannot create a playable board with these parameters. Try reducing the number of mines or increasing the dimensions of the board.")
+
             new_mine = random.choice(tiles_list)
             new_mine.is_mine = True
             tiles_list.remove(new_mine)
