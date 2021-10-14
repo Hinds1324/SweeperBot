@@ -41,7 +41,7 @@ class MinesweeperBoard:
         """
         Returns the tile object located at the coord (x,y) on the board.
         """
-        return self.board[self.height * y + x]
+        return self.board[self.width * y + x]
 
     def board_coords(self):
         """
