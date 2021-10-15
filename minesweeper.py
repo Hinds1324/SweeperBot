@@ -63,8 +63,8 @@ class MinesweeperBoard:
 
     def uncover(self, x, y):
         """
-        Uncover the tile located and x,y on the board. If this is the first tile to be uncovered,
-        then also generate the rest of the mines on the board.
+        Uncover the tile located at x,y on the board. If this is the first tile to be uncovered,
+        then also generate the mines on the rest of the board.
         """
         selected_tile = self.get_tile_at(x, y)
 
@@ -84,8 +84,6 @@ class MinesweeperBoard:
         if selected_tile.value == 0:
             for i, j in self.adjacent_coords(x, y):
                 if not (i == j == 0): self.uncover(i, j)
-
-        return selected_tile
 
     def generate_mines(self, uncover_x, uncover_y):
         """
