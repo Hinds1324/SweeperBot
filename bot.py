@@ -6,9 +6,20 @@ from minesweeper import *
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+bot = commands.Bot(command_prefix="sw?")
+last_user_inputs = {}
 
-# bot = commands.Bot(command_prefix="<@541197833395765249> ")
-bot = commands.Bot(command_prefix="sw!")
+
+def get_last_user_input(user, key):
+    input_dict = last_user_inputs.get(user)
+    if input_dict is None: return
+    else: return input_dict.get(key)
+
+
+def set_last_user_input(user, key, value):
+    input_dict = last_user_inputs.get(user) or {}
+    input_dict[key] = value
+    last_user_inputs[user] = input_dict
 
 
 @bot.event
@@ -16,8 +27,20 @@ async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
 
 
-@bot.command(name="generate", help="Generate a game of Minesweeper.")
-async def generate(ctx, width: int, height: int, mines: int):
+@bot.command(name="generate", aliases=["g"], help="Generate a game of Minesweeper.")
+async def generate(ctx, width: int = 0, height: int = 0, mines: int = 0):
+    author = ctx.author
+
+    # If the user doesn't pass an argument for width, height, or mines, then use the value they used last time they
+    # executed the command. If they haven't executed the command before, then use the default values (8, 8, 12).
+    width = width or get_last_user_input(author, "width") or 8
+    height = height or get_last_user_input(author, "height") or 8
+    mines = mines or get_last_user_input(author, "mines") or 12
+
+    set_last_user_input(author, "width", width)
+    set_last_user_input(author, "height", height)
+    set_last_user_input(author, "mines", mines)
+
     try:
         mb = MinesweeperBoard(width, height, mines)
     except UnplayableBoardError:
