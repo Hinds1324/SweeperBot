@@ -4,9 +4,34 @@ from discord.ext import commands
 from dotenv import load_dotenv
 from minesweeper import *
 
+# Read bot token from .env file
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+
+# Create an instance of the bot client
 bot = commands.Bot(command_prefix="sw?")
+
+# List of custom emojis that represent Minesweeper tiles
+custom_tile_strings = [
+        "<:tile0:540918716586655744>",
+        "<:tile1:540918716632924181>",
+        "<:tile2:540918716624535552>",
+        "<:tile3:540918716460826672>",
+        "<:tile4:540918716163162134>",
+        "<:tile5:540918716595044352>",
+        "<:tile6:540918716674736148>",
+        "<:tile7:540918716599107584>",
+        "<:tile8:540918716649701406>",
+        "<:tilem:540918716809084938>"
+    ]
+
+# List of default emojis that represent Minesweeper tiles. These are used in case we can't use the custom emojis.
+default_tile_strings = [
+        "0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "💣"
+    ]
+
+# Dictionary that remembers arguments that users previously passed to certain commands.
+# Allows users to repeat commands with previous arguments so they don't have to type the arguments again.
 last_user_inputs = {}
 
 
