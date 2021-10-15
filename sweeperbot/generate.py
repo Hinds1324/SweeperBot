@@ -2,7 +2,7 @@ from sweeperbot.user_inputs import *
 from minesweeper import *
 
 
-# List of custom emojis that represent Minesweeper tiles
+# List of custom emojis that represent Minesweeper tiles.
 custom_tile_strings = [
         "<:tile0:540918716586655744>",
         "<:tile1:540918716632924181>",
@@ -18,7 +18,7 @@ custom_tile_strings = [
 
 # List of default emojis that represent Minesweeper tiles. These are used in case we can't use the custom emojis.
 default_tile_strings = [
-        "0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "💣"
+        "0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "💣"
     ]
 
 
@@ -27,14 +27,11 @@ async def generate(ctx, width: int = 0, height: int = 0, mines: int = 0):
 
     # If the user doesn't pass an argument for width, height, or mines, then use the value they used last time they
     # executed the command. If they haven't executed the command before, then use the default values (8, 8, 12).
-    width = width or get_last_user_input(author, "width") or 8
-    height = height or get_last_user_input(author, "height") or 8
-    mines = mines or get_last_user_input(author, "mines") or 12
+    width = resolve_input(author, "width", width, 8)
+    height = resolve_input(author, "height", height, 8)
+    mines = resolve_input(author, "mines", mines, 12)
 
-    set_last_user_input(author, "width", width)
-    set_last_user_input(author, "height", height)
-    set_last_user_input(author, "mines", mines)
-
+    # Create the board using the given parameters.
     try:
         mb = MinesweeperBoard(width, height, mines)
     except UnplayableBoardError:
@@ -44,11 +41,23 @@ async def generate(ctx, width: int = 0, height: int = 0, mines: int = 0):
         await ctx.send("Cannot create a playable board with these parameters. Try reducing the number of mines or increasing the dimensions of the board.")
         return
 
+    # Uncover the central tile of the board (essentially, perform the first click for the user) and generate
+    # a board string.
     mb.uncover(width // 2, height // 2)
+    board_string = mb.get_board_string(custom_tile_strings, 2)
     response = f"[Mines: {mines}] \n" \
-               f"{mb.get_board_string(custom_tile_strings, 2)}"
+               f"{board_string}"
 
+    # If the response is over 2000 characters, try using the default emojis to display the board instead.
+    if len(response) > 2000:
+        board_string = mb.get_board_string(default_tile_strings, 2)
+        response = f"[Mines: {mines}] \n" \
+                   f"{board_string}"
+
+    # If the response is STILL over 2000 characters, there's nothing we can do.
     if len(response) > 2000:
         await ctx.send("This board takes up too many characters. Try reducing the dimensions of the board.")
-    else:
-        await ctx.send(response)
+        return
+
+    # If all goes well, display the board as a chat message.
+    await ctx.send(response)
