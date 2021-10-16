@@ -83,7 +83,7 @@ class MinesweeperBoard:
         ### uncover all of its adjacent tiles.
         if selected_tile.value == 0:
             for i, j in self.adjacent_coords(x, y):
-                if not (i == j == 0): self.uncover(i, j)
+                self.uncover(i, j)
 
     def generate_mines(self, uncover_x, uncover_y):
         """

@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/SweeperBot.iml" filepath="$PROJECT_DIR$/.idea/SweeperBot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../f28pl-2021-22-python-coursework/.idea/f28pl-2021-22-python-coursework.iml" filepath="$PROJECT_DIR$/../f28pl-2021-22-python-coursework/.idea/f28pl-2021-22-python-coursework.iml" />
     </modules>
   </component>
 </project>
