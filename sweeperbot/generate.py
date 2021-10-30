@@ -1,5 +1,5 @@
-from sweeperbot.user_inputs import *
-from minesweeper import *
+from sweeperbot import user_inputs
+import minesweeper
 
 
 # List of custom emojis that represent Minesweeper tiles.
@@ -27,14 +27,14 @@ async def generate(ctx, width: int = 0, height: int = 0, mines: int = 0):
 
     # If the user doesn't pass an argument for width, height, or mines, then use the value they used last time they
     # executed the command. If they haven't executed the command before, then use the default values (8, 8, 12).
-    width = resolve_input(author, "width", width, 8)
-    height = resolve_input(author, "height", height, 8)
-    mines = resolve_input(author, "mines", mines, 12)
+    width = user_inputs.resolve_input(author, "width", width, 8)
+    height = user_inputs.resolve_input(author, "height", height, 8)
+    mines = user_inputs.resolve_input(author, "mines", mines, 12)
 
     # Create the board using the given parameters.
     try:
-        mb = MinesweeperBoard(width, height, mines)
-    except UnplayableBoardError:
+        mb = minesweeper.MinesweeperBoard(width, height, mines)
+    except minesweeper.UnplayableBoardError:
         # TODO: Seems like the exception is caught by the bot client before it's caught here? I don't know if that's
         #  what's actually happening but yeah. Basically I don't know how I'm supposed to handle my own exceptions
         #  because the message I'm trying to send here never gets sent.
