@@ -32,18 +32,15 @@ async def generate(ctx, width: int = 0, height: int = 0, mines: int = 0):
     mines = resolve_input(author, "mines", mines, 12)
 
     # Create the board using the given parameters.
-    try:
-        mb = MinesweeperBoard(width, height, mines)
-    except UnplayableBoardError:
-        # TODO: Seems like the exception is caught by the bot client before it's caught here? I don't know if that's
-        #  what's actually happening but yeah. Basically I don't know how I'm supposed to handle my own exceptions
-        #  because the message I'm trying to send here never gets sent.
-        await ctx.send("Cannot create a playable board with these parameters. Try reducing the number of mines or increasing the dimensions of the board.")
-        return
+    mb = MinesweeperBoard(width, height, mines)
 
     # Uncover the central tile of the board (essentially, perform the first click for the user) and generate
     # a board string.
-    mb.uncover(width // 2, height // 2)
+    try:
+        mb.uncover(width // 2, height // 2)
+    except UnplayableBoardError:
+        await ctx.send("Cannot create a playable board with these parameters. Try reducing the number of mines or increasing the dimensions of the board.")
+        return
     board_string = mb.get_board_string(custom_tile_strings, 2)
     response = f"[Mines: {mines}] \n" \
                f"{board_string}"
